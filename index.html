@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¿Quieres ser mi San Valentín? ❤️</title>
+    <style>
+        :root {
+            --rosa-pastel: #ffdeeb;
+            --rosa-fuerte: #ff4d6d;
+            --blanco: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: var(--rosa-pastel);
+            font-family: 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        #container {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-width: 90%;
+            z-index: 10;
+        }
+
+        h1 {
+            color: var(--rosa-fuerte);
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .gif-container img {
+            width: 200px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            align-items: center;
+            /* Eliminamos position relative de aquí para que el botón vuele por toda la pantalla */
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        #btnSi {
+            background-color: var(--rosa-fuerte);
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
+            z-index: 11;
+        }
+
+        #btnNo {
+            background-color: #999;
+            color: white;
+            /* Ya no es absoluto desde el inicio para que esté al costado */
+            z-index: 11;
+        }
+
+        #success-msg {
+            display: none;
+        }
+
+        #success-msg h1 {
+            font-size: 2.5rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="container">
+        <div id="main-content">
+            <div class="gif-container">
+                <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExOTcxMDB1dm5hZ2ZzeXhtbjB5M2VlZWoyazk5ZWZ4NXhmOXB3Mm5leiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/K6WIhJ07gwGkIAQfwN/giphy.gif" alt="Corgi tierno">
+            </div>
+            <h1>¿Quieres ser mi San Valentín? ❤️</h1>
+            <div class="buttons">
+                <button id="btnSi">¡SÍ! 😍</button>
+                <button id="btnNo">No 😢</button>
+            </div>
+        </div>
+
+        <div id="success-msg">
+            <div class="gif-container">
+                <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExc3Q2ZDJtcmEwMjg1dzhlOXR1b2lkejU5a2FxeHhtMjJ2MjdjeWh1cSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/7IelwebeyjVU4/giphy.gif" alt="Amor">
+            </div>
+            <h1>¡SABÍA QUE DIRÍAS QUE SÍ! ❤️</h1>
+            <p>Prepárate para el mejor 14 de febrero de todos, no hay vuelta atrás, dejemos el pasado y sigamos adelante.</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
+    <script>
+        const btnNo = document.getElementById('btnNo');
+        const btnSi = document.getElementById('btnSi');
+        const mainContent = document.getElementById('main-content');
+        const successMsg = document.getElementById('success-msg');
+
+        // Función para que el botón "No" huya
+        btnNo.addEventListener('mouseover', () => {
+            // Hacemos que la posición sea absoluta justo antes de moverlo por primera vez
+            btnNo.style.position = 'absolute';
+            
+            const x = Math.random() * (window.innerWidth - btnNo.offsetWidth);
+            const y = Math.random() * (window.innerHeight - btnNo.offsetHeight);
+            
+            btnNo.style.left = `${x}px`;
+            btnNo.style.top = `${y}px`;
+        });
+
+        btnSi.addEventListener('click', () => {
+            mainContent.style.display = 'none';
+            successMsg.style.display = 'block';
+            
+            const duration = 15 * 1000;
+            const animationEnd = Date.now() + duration;
+            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            function randomInRange(min, max) {
+              return Math.random() * (max - min) + min;
+            }
+
+            const interval = setInterval(function() {
+              const timeLeft = animationEnd - Date.now();
+
+              if (timeLeft <= 0) {
+                return clearInterval(interval);
+              }
+
+              const particleCount = 50 * (timeLeft / duration);
+              confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+              confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+            }, 250);
+        });
+    </script>
+</body>
+</html>
