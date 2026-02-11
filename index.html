@@ -3,120 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>¿Bel, Quieres ser mi San Valentín? ❤️</title>
+    <title>Para Bel ❤️</title>
     <style>
         :root {
-            --rosa-pastel: #ffdeeb;
-            --rosa-fuerte: #ff4d6d;
-            --blanco: #ffffff;
+            --rosa-fondo: #ff4d6d;
+            --rosa-suave: #ffdeeb;
+            --crema-carta: #fdf5e6;
+            --texto-marron: #5d4037;
+            --rosa-fuerte: #d81b60;
         }
 
         body {
             margin: 0;
-            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            background-color: var(--rosa-pastel);
-            font-family: 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--rosa-fondo), var(--rosa-suave));
+            font-family: 'Arial Rounded MT Bold', sans-serif;
             overflow: hidden;
+        }
+
+        /* FONDO DE CORAZONES */
+        .corazones-fondo {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* SOBRE INICIAL */
+        .sobre-wrapper {
+            z-index: 10;
+            cursor: pointer;
             text-align: center;
         }
-
-        #container {
-            background: rgba(255, 255, 255, 0.8);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            max-width: 90%;
-            z-index: 10;
+        .sobre {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            background: #ff85a1;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
         }
-
-        h1 {
-            color: var(--rosa-fuerte);
-            font-size: 2rem;
-            margin-bottom: 20px;
+        .sobre::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0;
+            border-top: 110px solid var(--rosa-fondo);
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            transform-origin: top;
+            transition: all 0.6s ease-in-out;
+            z-index: 2;
         }
+        .sobre.abierto::before { transform: rotateX(180deg); z-index: 0; }
 
-        .gif-container img {
-            width: 200px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-        }
-
-        .buttons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            align-items: center;
-            /* Eliminamos position relative de aquí para que el botón vuele por toda la pantalla */
-        }
-
-        button {
-            padding: 15px 30px;
-            font-size: 1.2rem;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        #btnSi {
-            background-color: var(--rosa-fuerte);
-            color: white;
-            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
-            z-index: 11;
-        }
-
-        #btnNo {
-            background-color: #999;
-            color: white;
-            /* Ya no es absoluto desde el inicio para que esté al costado */
-            z-index: 11;
-        }
-
-        #success-msg {
+        /* CARTA ESTILO ALEX DEV */
+        #carta {
             display: none;
+            background: var(--crema-carta);
+            padding: 40px;
+            border-radius: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            z-index: 10;
+            animation: aparecer 0.8s ease forwards;
         }
 
-        #success-msg h1 {
-            font-size: 2.5rem;
+        .texto-poema { text-align: left; color: var(--texto-marron); line-height: 1.6; margin-bottom: 20px; }
+        
+        /* EFECTO ÁRBOL FLORECIENDO */
+        .contenedor-arbol {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            margin: 0 auto;
         }
+        .arbol-img {
+            width: 100%;
+            height: auto;
+            transform: scale(0.5); /* Empieza pequeño */
+            opacity: 0;
+            transition: all 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .arbol-floreciendo {
+            transform: scale(1); /* Florece */
+            opacity: 1;
+        }
+
+        /* BOTONES */
+        .botones { display: flex; justify-content: center; gap: 20px; margin-top: 25px; height: 50px; position: relative; }
+        button { padding: 12px 30px; border: none; border-radius: 50px; cursor: pointer; font-weight: bold; transition: 0.2s; z-index: 10; }
+        #btnSi { background: var(--rosa-fondo); color: white; }
+        #btnNo { background: #bbb; color: white; }
+
+        /* ÉXITO */
+        #exito { display: none; }
+        .lugar-invitacion { color: var(--rosa-fuerte); font-size: 2.8rem; font-weight: bold; margin: 10px 0; }
+
+        @keyframes aparecer { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        @keyframes caer { to { transform: translateY(110vh) rotate(360deg); } }
     </style>
 </head>
 <body>
 
-    <div id="container">
-        <div id="main-content">
-            <div class="gif-container">
-                <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExOTcxMDB1dm5hZ2ZzeXhtbjB5M2VlZWoyazk5ZWZ4NXhmOXB3Mm5leiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/K6WIhJ07gwGkIAQfwN/giphy.gif" alt="Corgi tierno">
+    <div class="corazones-fondo" id="fondo"></div>
+
+    <div class="sobre-wrapper" id="sobre-wrapper">
+        <div class="sobre" id="sobre">
+            <div style="position: absolute; top: 45px; left: 50%; transform: translateX(-50%); font-size: 45px; z-index: 3;">❤️</div>
+        </div>
+        <p style="color: white; margin-top: 20px; font-weight: bold; font-size: 1.2rem;">Para: Bel</p>
+    </div>
+
+    <div id="carta">
+        <div id="contenido-invitacion">
+            <div class="texto-poema">
+                <p>Para el amor de mi vida:</p>
+                <p>Si pudiera elegir un lugar seguro, sería a tu lado.</p>
+                <p>Cuanto más tiempo estoy contigo más te amo. <br>— I want to be by your side for the rest of my life, I Love You!</p>
             </div>
-            <h1>¿Quieres ser mi San Valentín? ❤️</h1>
-            <div class="buttons">
+
+            <div class="contenedor-arbol">
+                <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExbTcycjdtbHB1dnQ5NmhwdHlhbHVqcTh6cHhwcXQ2dTN4ZWl1NXNvNiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/NV6PrFUUtkuj3z5eiF/giphy.gif" id="arbol" class="arbol-img" alt="Árbol de Amor">
+            </div>
+
+            <h2 style="color: var(--rosa-fuerte); margin: 20px 0;">¿Bel, quieres ser mi San Valentín?</h2>
+
+            <div class="botones">
                 <button id="btnSi">¡SÍ! 😍</button>
                 <button id="btnNo">No 😢</button>
             </div>
+
+            <div style="margin-top: 25px; border-top: 1px solid #e0d5c1; padding-top: 15px;">
+                <p style="font-size: 0.9rem; color: #8d6e63;">Mi amor por ti comenzó hace...</p>
+                <div id="timer" style="color: var(--rosa-fuerte); font-weight: bold;">Calculando...</div>
+            </div>
         </div>
 
-        <div id="success-msg">
-            <div class="gif-container">
-                <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExc3Q2ZDJtcmEwMjg1dzhlOXR1b2lkejU5a2FxeHhtMjJ2MjdjeWh1cSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/7IelwebeyjVU4/giphy.gif" alt="Amor">
+        <div id="exito">
+            <h1 style="font-size: 2.5rem; color: #333;">Felicidades, sabia que dirias que si! 🥳</h1>
+            <div style="background: white; border-radius: 25px; padding: 30px; margin-top: 20px;">
+                <p style="color: #666;">Nos vamos a un</p>
+                <p class="lugar-invitacion">LUGAR SORPRESA</p>
+                <p style="color: var(--rosa-fuerte); font-size: 1.5rem;">13 y/o 14 de Febrero</p>
+                <p style="color: var(--rosa-fuerte); font-size: 1.5rem;">6:00PM - 8:00 PM</p>
+                <p style="margin-top: 25px; font-size: 1.6rem; font-weight: bold;">Disfrutemos cada momento juntos ❤️</p>
             </div>
-            <h1>¡SABÍA QUE DIRÍAS QUE SÍ! ❤️</h1>
-            <p>Prepárate para el mejor 14 de febrero de todos, no hay vuelta atrás, dejemos el pasado y sigamos adelante.</p>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-
     <script>
+        // CONTADOR
+        const fechaInicio = new Date("2024-09-23T20:30:00"); 
+        function actualizarContador() {
+            const ahora = new Date();
+            const diff = ahora - fechaInicio;
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const m = Math.floor((diff / 1000 / 60) % 60);
+            const s = Math.floor((diff / 1000) % 60);
+            document.getElementById("timer").innerHTML = `${d} días ${h}h ${m}m ${s}s`;
+        }
+        setInterval(actualizarContador, 1000);
+
+        // LÓGICA DE APERTURA
+        const sobreWrapper = document.getElementById('sobre-wrapper');
+        const sobre = document.getElementById('sobre');
+        const carta = document.getElementById('carta');
+        const arbol = document.getElementById('arbol');
         const btnNo = document.getElementById('btnNo');
         const btnSi = document.getElementById('btnSi');
-        const mainContent = document.getElementById('main-content');
-        const successMsg = document.getElementById('success-msg');
 
-        // Función para que el botón "No" huya
+        sobreWrapper.addEventListener('click', () => {
+            sobre.classList.add('abierto');
+            setTimeout(() => {
+                sobreWrapper.style.display = 'none';
+                carta.style.display = 'block';
+                // El árbol florece después de mostrar la carta
+                setTimeout(() => {
+                    arbol.classList.add('arbol-floreciendo');
+                }, 200);
+                actualizarContador();
+            }, 700);
+        });
+
+        // BOTÓN NO HUYE POR TODA LA PANTALLA
         btnNo.addEventListener('mouseover', () => {
             // Hacemos que la posición sea absoluta justo antes de moverlo por primera vez
             btnNo.style.position = 'absolute';
@@ -129,30 +205,23 @@
         });
 
         btnSi.addEventListener('click', () => {
-            mainContent.style.display = 'none';
-            successMsg.style.display = 'block';
-            
-            const duration = 15 * 1000;
-            const animationEnd = Date.now() + duration;
-            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-
-            function randomInRange(min, max) {
-              return Math.random() * (max - min) + min;
-            }
-
-            const interval = setInterval(function() {
-              const timeLeft = animationEnd - Date.now();
-
-              if (timeLeft <= 0) {
-                return clearInterval(interval);
-              }
-
-              const particleCount = 50 * (timeLeft / duration);
-              confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
-              confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
-            }, 250);
+            document.getElementById('contenido-invitacion').style.display = 'none';
+            document.getElementById('exito').style.display = 'block';
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
         });
+
+        // CORAZONES DE FONDO
+        function crearCorazonFondo() {
+            const h = document.createElement('div');
+            h.innerHTML = '❤️';
+            h.style.position = 'absolute';
+            h.style.left = Math.random() * 100 + 'vw';
+            h.style.top = '-50px';
+            h.style.animation = `caer ${Math.random() * 3 + 3}s linear forwards`;
+            document.getElementById('fondo').appendChild(h);
+            setTimeout(() => h.remove(), 6000);
+        }
+        setInterval(crearCorazonFondo, 400);
     </script>
 </body>
-
 </html>
